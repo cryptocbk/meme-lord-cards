@@ -1,64 +1,28 @@
+from flask import Flask, request, jsonify
 import requests
-import json
 
-API_KEY = "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" # внутри скобок свой апи ключ отсюда https://openrouter.ai/settings/keys
+app = Flask(__name__)
+
+API_KEY = "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"  # вставь сюда ключ
 MODEL = "deepseek/deepseek-r1"
 
-def process_content(content):
-    return content.replace('<think>', '').replace('</think>', '')
+@app.route("/")
+def home():
+    return {"status": "ok", "msg": "DeepSeek API Proxy работает!"}
 
-def chat_stream(prompt):
+@app.route("/deepseek", methods=["POST"])
+def deepseek():
+    user_prompt = request.json.get("prompt", "")
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
-    
     data = {
         "model": MODEL,
-        "messages": [{"role": "user", "content": prompt}],
-        "stream": True
+        "messages": [{"role": "user", "content": user_prompt}],
     }
-
-    with requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers=headers,
-        json=data,
-        stream=True
-    ) as response:
-        if response.status_code != 200:
-            print("Ошибка API:", response.status_code)
-            return ""
-
-        full_response = []
-        
-        for chunk in response.iter_lines():
-            if chunk:
-                chunk_str = chunk.decode('utf-8').replace('data: ', '')
-                try:
-                    chunk_json = json.loads(chunk_str)
-                    if "choices" in chunk_json:
-                        content = chunk_json["choices"][0]["delta"].get("content", "")
-                        if content:
-                            cleaned = process_content(content)
-                            print(cleaned, end='', flush=True)
-                            full_response.append(cleaned)
-                except:
-                    pass
-
-        print()  # Перенос строки после завершения потока
-        return ''.join(full_response)
-def main():
-    print("Чат с DeepSeek-R1 (by Antric)\nДля выхода введите 'exit'\n")
-
-    while True:
-        user_input = input("Вы: ")
-        
-        if user_input.lower() == 'exit':
-            print("Завершение работы...")
-            break
-            
-        print("DeepSeek-R1:", end=' ', flush=True)
-        chat_stream(user_input)
+    r = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
+    return jsonify(r.json())
 
 if __name__ == "__main__":
-    main()
+    app.run(host="0.0.0.0", port=5000)
