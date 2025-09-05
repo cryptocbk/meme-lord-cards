@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meme Lord Cards</title>
+  <meta name="description" content="Turn any photo into a shareable Meme Lord card with AI‑generated funny quotes. 100% client-side." />
+  <meta name="theme-color" content="#0b0f16" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bangers&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f16; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; --ring:#22c55e55;
+      --radius:20px; --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(1200px 800px at 70% -10%, #1f2937 0%, #0b0f16 40%), var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Apple Color Emoji,Arial,sans-serif;}
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(12px);background:linear-gradient(#0b0f16cc,#0b0f1600);z-index:10}
+    .wrap{max-width:1060px;margin:0 auto;padding:16px}
+    .nav{display:flex;align-items:center;gap:12px}
+    .logo{font-weight:800;letter-spacing:.5px}
+    .badge{font-size:12px;color:#a7f3d0;background:#064e3b;border:1px solid #065f46;border-radius:999px;padding:4px 8px}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px}
+    @media(min-width:980px){.grid{grid-template-columns:420px 1fr}}
+
+    .panel{background:linear-gradient(180deg,#141a24,#0f1622);border:1px solid #1f2937;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+    .panel h2{margin:0 0 10px 0;font-size:18px}
+    .muted{color:var(--muted);font-size:13px}
+
+    .upload{border:2px dashed #374151;border-radius:16px;padding:16px;text-align:center;transition:.2s}
+    .upload.drag{border-color:var(--accent);box-shadow:0 0 0 6px var(--ring)}
+    .upload input{display:none}
+    .upload .btn{display:inline-flex;gap:8px;align-items:center;margin-top:10px}
+
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .field{flex:1;min-width:160px}
+    label{display:block;font-size:12px;color:var(--muted);margin:6px 0}
+    select,input[type="text"],input[type="number"],input[type="password"]{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #374151;background:#0b1220;color:var(--text)}
+
+    .btn{background:#10b981;color:#03211a;border:none;padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(16,185,129,.25);transition:transform .08s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.secondary{background:#1f2937;color:#e5e7eb;border:1px solid #374151;box-shadow:none}
+    .btn.ghost{background:transparent;color:var(--text);border:1px dashed #334155}
+
+    .tools{display:flex;gap:8px;flex-wrap:wrap}
+
+    canvas{width:100%;max-width:520px;border-radius:16px;border:1px solid #1f2937;background:#0b1220}
+
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+    .thumb{background:#0b1220;border:1px solid #1f2937;border-radius:14px;padding:10px}
+    .thumb img{width:100%;border-radius:10px}
+
+    footer{opacity:.8;font-size:12px;padding:28px 0;text-align:center}
+    a{color:#86efac}
+
+    .theme-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #334155;padding:8px 10px;border-radius:999px;cursor:pointer}
+    .theme-chip input{display:none}
+    .theme-chip.active{border-color:#10b981;box-shadow:0 0 0 4px var(--ring)}
+    .chips{display:flex;flex-wrap:wrap;gap:10px}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;background:#0b1220;border:1px solid #334155;border-radius:6px;padding:2px 6px;color:#e5e7eb}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <div class="logo" style="font-family:Bangers,Inter,sans-serif;font-size:22px;display:flex;align-items:center;gap:10px">
+        🤖 Meme Lord Cards
+      </div>
+      <span class="badge">100% client‑side • free</span>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <!-- LEFT: controls -->
+    <section class="panel">
+      <h2>1) Upload your photo</h2>
+      <div id="drop" class="upload">
+        <div>Drag & drop an image here or
+          <label for="file" class="btn secondary">choose a file</label>
+        </div>
+        <div class="muted">JPG/PNG up to ~10 MB. Processed locally in your browser.</div>
+        <input id="file" type="file" accept="image/*" />
+      </div>
+
+      <h2 style="margin-top:18px">2) Card settings</h2>
+      <div class="row">
+        <div class="field">
+          <label>Display name</label>
+          <input id="name" type="text" placeholder="Meme Lord" />
+        </div>
+        <div class="field">
+          <label>Rarity</label>
+          <select id="rarity">
+            <option>Common</option>
+            <option>Rare</option>
+            <option>Epic</option>
+            <option>Legendary</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Theme</label>
+          <div class="chips" id="themes"></div>
+        </div>
+        <div class="field">
+          <label>Funny quote</label>
+          <div class="tools">
+            <button id="quoteBtn" class="btn secondary" type="button">🎭 Random</button>
+            <button id="aiBtn" class="btn" type="button">✨ Generate with AI</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field"><label>Meme Level</label><input id="lvl" type="number" min="0" max="999" value="87"/></div>
+        <div class="field"><label>Virality %</label><input id="vir" type="number" min="0" max="100" value="69"/></div>
+        <div class="field"><label>Chaos</label><input id="chs" type="number" min="0" max="100" value="42"/></div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>OpenAI API Key <span class="muted">(stored only in memory; optional)</span></label>
+          <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off"/>
+        </div>
+        <div class="field" style="display:flex;align-items:flex-end">
+          <button id="testAI" class="btn ghost" type="button">Test AI</button>
+        </div>
+      </div>
+
+      <div class="tools" style="margin-top:12px">
+        <button id="randomBtn" class="btn" type="button">🎲 Shuffle stats</button>
+        <button id="genBtn" class="btn" type="button">⚡ Render card</button>
+        <button id="dlBtn" class="btn secondary" type="button">⬇️ Download PNG</button>
+        <button id="shareBtn" class="btn ghost" type="button">📤 Share</button>
+      </div>
+
+      <p class="muted" style="margin-top:10px">Privacy: your image never leaves your device. All rendering happens on the Canvas locally.</p>
+    </section>
+
+    <!-- RIGHT: preview -->
+    <section class="panel">
+      <h2>Preview</h2>
+      <canvas id="card" width="750" height="1050" aria-label="Card preview"></canvas>
+    </section>
+
+    <section class="panel" style="grid-column:1/-1">
+      <h2>Local gallery</h2>
+      <div id="gallery" class="gallery"></div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    Built for fun ❤️ — host this single file on GitHub Pages. No trackers, no servers.
+  </footer>
+
+<script>
+(function(){
+  const $ = (s) => document.querySelector(s);
+  const drop = $('#drop');
+  const file = $('#file');
+  const nameInput = $('#name');
+  const rarity = $('#rarity');
+  const lvl = $('#lvl');
+  const vir = $('#vir');
+  const chs = $('#chs');
+  const card = $('#card');
+  const ctx = card.getContext('2d');
+  const dlBtn = $('#dlBtn');
+  const genBtn = $('#genBtn');
+  const randomBtn = $('#randomBtn');
+  const quoteBtn = $('#quoteBtn');
+  const aiBtn = $('#aiBtn');
+  const shareBtn = $('#shareBtn');
+  const gallery = $('#gallery');
+  const apiKeyInput = $('#apiKey');
+  const testAI = $('#testAI');
+  const themesWrap = $('#themes');
+
+  // ---------- THEME DEFINITIONS ----------
+  const THEMES = [
+    { id:'neon', name:'Neon Vapor', bg:['#0f172a','#0b1220'], glow:'#22d3ee', primary:'#22d3ee', accent:'#f472b6'},
+    { id:'gold', name:'Royal Gold', bg:['#1b1b1b','#101010'], glow:'#f59e0b', primary:'#fbbf24', accent:'#fde68a'},
+    { id:'matrix', name:'Matrix', bg:['#00140a','#000d08'], glow:'#22c55e', primary:'#10b981', accent:'#34d399'},
+    { id:'retro', name:'Retro Pop', bg:['#2b1b47','#1a1030'], glow:'#a78bfa', primary:'#f472b6', accent:'#fb7185'},
+    { id:'steel', name:'Steel', bg:['#0a0a0a','#151515'], glow:'#60a5fa', primary:'#93c5fd', accent:'#e5e7eb'}
+  ];
+
+  // ---------- STATE ----------
+  const state = {
+    image: null,
+    imageBitmap: null,
+    quote: 'Certified Meme Lord',
+    theme: THEMES[0]
+  };
+
+  // ---------- UI: THEME CHIPS ----------
+  function renderThemeChips(){
+    themesWrap.innerHTML = '';
+    THEMES.forEach(t => {
+      const chip = document.createElement('label');
+      chip.className = 'theme-chip' + (state.theme.id===t.id ? ' active' : '');
+      chip.innerHTML = `<input type="radio" name="theme" value="${t.id}"><span>🎨 ${t.name}</span>`;
+      chip.onclick = () => { state.theme = t; drawCard(); document.querySelectorAll('.theme-chip').forEach(c=>c.classList.remove('active')); chip.classList.add('active'); };
+      themesWrap.appendChild(chip);
+    });
+  }
+  renderThemeChips();
+
+  // ---------- IMAGE HANDLING ----------
+  function setDropActive(a){ drop.classList.toggle('drag', !!a); }
+  ;['dragenter','dragover'].forEach(e=>drop.addEventListener(e, ev=>{ ev.preventDefault(); setDropActive(true); }));
+  ;['dragleave','drop'].forEach(e=>drop.addEventListener(e, ev=>{ ev.preventDefault(); setDropActive(false); }));
+  drop.addEventListener('drop', async (ev)=>{
+    const f = ev.dataTransfer.files?.[0]; if(f) await loadFile(f);
+  });
+  file.addEventListener('change', async ()=>{ const f = file.files?.[0]; if(f) await loadFile(f); });
+
+  async function loadFile(f){
+    if(!f.type.startsWith('image/')) return alert('Please select an image file.');
+    state.image = URL.createObjectURL(f);
+    state.imageBitmap = await createImageBitmap(await (await fetch(state.image)).blob());
+    drawCard();
+  }
+
+  // ---------- RANDOMIZATION ----------
+  const FUNNY_LINES = [
+    "Powered by caffeine and chaos",
+    "Wi‑Fi whisperer, router tamer",
+    "Certified ‘one more episode’ pro",
+    "Runs on memes and instant noodles",
+    "404: serious face not found",
+    "Keyboard warrior, snack mage",
+    "Low battery, high drama",
+    "Lag spikes, zero excuses",
+    "Born to scroll, forced to work",
+    "NPC energy, main‑character hair"
+  ];
+  function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+  function randomize(){
+    nameInput.value = ["Meme Lord","Chaos Gremlin","Vibe Captain","Emoji Overlord"][rand(0,3)];
+    rarity.selectedIndex = rand(0,3);
+    lvl.value = rand(10,999); vir.value = rand(1,100); chs.value = rand(0,100);
+    state.quote = FUNNY_LINES[rand(0,FUNNY_LINES.length-1)];
+    drawCard();
+  }
+
+  // ---------- AI QUOTE (OpenAI from browser) ----------
+  async function aiQuote(){
+    const key = apiKeyInput.value.trim();
+    if(!key) { alert('Enter your OpenAI API key first.'); return; }
+    const prompt = `Write a short, witty, meme‑like one‑liner for a social card.\nRules: max 12 words, playful, internet humor, no profanity, no hashtags.`;
+    aiBtn.disabled = true; aiBtn.textContent = '✨ Thinking...';
+    try{
+      const res = await fetch('https://api.openai.com/v1/chat/completions',{
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role:'system', content:'You craft ultra-short, funny, family‑friendly meme captions.' },
+            { role:'user', content: prompt }
+          ],
+          temperature: 0.9,
+          max_tokens: 30
+        })
+      });
+      if(!res.ok){
+        const t = await res.text();
+        throw new Error(`API error ${res.status}: ${t}`);
+      }
+      const data = await res.json();
+      const text = data.choices?.[0]?.message?.content?.trim();
+      if(text) { state.quote = text.replace(/^"|"$/g,''); drawCard(); }
+    }catch(err){
+      console.error(err);
+      alert('AI request failed. Using a random line instead.');
+      state.quote = FUNNY_LINES[rand(0,FUNNY_LINES.length-1)];
+      drawCard();
+    }finally{
+      aiBtn.disabled = false; aiBtn.textContent = '✨ Generate with AI';
+    }
+  }
+
+  testAI.addEventListener('click', async ()=>{
+    const key = apiKeyInput.value.trim();
+    if(!key) return alert('Enter your OpenAI API key first.');
+    try{ await aiQuote(); }catch(e){ console.error(e); }
+  });
+  aiBtn.addEventListener('click', aiQuote);
+
+  // ---------- DRAWING ----------
+  function roundRect(ctx, x, y, w, h, r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y);
+    ctx.arcTo(x+w, y, x+w, y+h, rr);
+    ctx.arcTo(x+w, y+h, x, y+h, rr);
+    ctx.arcTo(x, y+h, x, y, rr);
+    ctx.arcTo(x, y, x+w, y, rr);
+    ctx.closePath();
+  }
+
+  function drawBackground(){
+    const g = ctx.createLinearGradient(0,0,0,card.height);
+    g.addColorStop(0, state.theme.bg[0]);
+    g.addColorStop(1, state.theme.bg[1]);
+    ctx.fillStyle = g; ctx.fillRect(0,0,card.width,card.height);
+    // outer frame
+    ctx.strokeStyle = state.theme.primary; ctx.lineWidth = 8; roundRect(ctx, 18, 18, card.width-36, card.height-36, 24); ctx.stroke();
+    ctx.shadowColor = state.theme.glow; ctx.shadowBlur = 24; ctx.strokeStyle = state.theme.glow; ctx.lineWidth = 2; roundRect(ctx, 26, 26, card.width-52, card.height-52, 20); ctx.stroke(); ctx.shadowBlur=0;
+  }
+
+  function drawImage(){
+    const pad = 48; const frameW = card.width - pad*2; const frameH = Math.floor(card.height*0.52);
+    const frameX = pad; const frameY = pad + 12;
+    // frame bg
+    ctx.fillStyle = '#0b1220'; roundRect(ctx, frameX, frameY, frameW, frameH, 18); ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 3; roundRect(ctx, frameX, frameY, frameW, frameH, 18); ctx.stroke();
+    if(!state.imageBitmap) return;
+    const img = state.imageBitmap;
+    const r = Math.min(frameW/img.width, frameH/img.height);
+    const w = img.width*r, h = img.height*r;
+    const x = frameX + (frameW - w)/2; const y = frameY + (frameH - h)/2;
+    ctx.save(); ctx.beginPath(); roundRect(ctx, frameX+6, frameY+6, frameW-12, frameH-12, 14); ctx.clip();
+    ctx.drawImage(img, x, y, w, h); ctx.restore();
+  }
+
+  function drawHeader(){
+    const title = (nameInput.value || 'Meme Lord').toUpperCase();
+    ctx.font = '800 42px Bangers, Inter, sans-serif';
+    ctx.fillStyle = '#e5e7eb';
+    ctx.textAlign = 'left';
+    ctx.fillText(title, 48, 620);
+
+    // rarity pill
+    const pill = rarity.value || 'Common';
+    const metrics = ctx.measureText(pill);
+    const pw = metrics.width + 28; const ph = 36; const px = card.width - pw - 48; const py = 590;
+    ctx.fillStyle = '#0b1220'; roundRect(ctx, px, py, pw, ph, 999); ctx.fill();
+    ctx.strokeStyle = state.theme.primary; ctx.lineWidth = 2; roundRect(ctx, px, py, pw, ph, 999); ctx.stroke();
+    ctx.fillStyle = state.theme.primary; ctx.font = '600 18px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText(pill, px+pw/2, py+24);
+  }
+
+  function wrapText(text, x, y, maxWidth, lineHeight){
+    const words = text.split(' ');
+    let line = '', dy = 0;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        ctx.fillText(line, x, y + dy); dy += lineHeight; line = words[n] + ' ';
+      } else { line = testLine; }
+    }
+    ctx.fillText(line.trim(), x, y + dy);
+  }
+
+  function drawStats(){
+    // quote box
+    const qx = 48, qy = 660, qw = card.width - 96, qh = 120;
+    ctx.fillStyle = '#0b1220'; roundRect(ctx, qx, qy, qw, qh, 16); ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 2; roundRect(ctx, qx, qy, qw, qh, 16); ctx.stroke();
+
+    ctx.font = '600 22px Inter, system-ui, sans-serif';
+    ctx.fillStyle = state.theme.accent;
+    ctx.fillText('“', qx+12, qy+34);
+
+    ctx.font = '600 20px Inter, system-ui, sans-serif';
+    ctx.fillStyle = '#e5e7eb';
+    wrapText(state.quote || 'Certified Meme Lord', qx+36, qy+34, qw-56, 26);
+
+    // stat bars
+    const sx = 48, sy = 810, sw = card.width - 96, sh = 180;
+    const stats = [
+      {label:'Meme Level', value: +lvl.value||0},
+      {label:'Virality', value: +vir.value||0},
+      {label:'Chaos', value: +chs.value||0}
+    ];
+    const barH = 26; let y = sy;
+    stats.forEach(st => {
+      ctx.font = '600 16px Inter, system-ui, sans-serif';
+      ctx.fillStyle = '#cbd5e1'; ctx.fillText(st.label, sx, y+18);
+      // track
+      const w = sw; const bx = sx; const by = y+24;
+      ctx.fillStyle = '#111827'; roundRect(ctx, bx, by, w, barH, 10); ctx.fill();
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 2; roundRect(ctx, bx, by, w, barH, 10); ctx.stroke();
+      // fill
+      const perc = Math.max(0, Math.min(100, st.value)) / 100;
+      const fw = Math.max(8, Math.floor(w*perc));
+      const grad = ctx.createLinearGradient(bx, by, bx+fw, by);
+      grad.addColorStop(0, state.theme.primary);
+      grad.addColorStop(1, state.theme.accent);
+      ctx.fillStyle = grad; roundRect(ctx, bx, by, fw, barH, 10); ctx.fill();
+      y += 60;
+    });
+
+    // footer tag
+    ctx.font = '600 14px Inter, system-ui, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'right';
+    ctx.fillText('meme.lord – generated offline', card.width-48, card.height-36);
+    ctx.textAlign = 'left';
+  }
+
+  function drawCard(){
+    // clear
+    ctx.clearRect(0,0,card.width,card.height);
+    drawBackground();
+    drawImage();
+    drawHeader();
+    drawStats();
+  }
+
+  // ---------- EXPORT / SHARE ----------
+  function toPNG(){ return card.toDataURL('image/png'); }
+  dlBtn.addEventListener('click', ()=>{
+    const link = document.createElement('a');
+    const name = (nameInput.value||'MemeLord').replace(/[^a-z0-9_-]+/gi,'_');
+    link.download = `${name}_card.png`;
+    link.href = toPNG(); link.click();
+    addToGallery();
+  });
+
+  async function share(){
+    try{
+      const blob = await (await fetch(toPNG())).blob();
+      const file = new File([blob], 'meme-lord.png', {type:'image/png'});
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({ title:'Meme Lord Card', files:[file], text:'Check my Meme Lord card!' });
+      } else {
+        alert('Sharing not supported. The image was downloaded instead.');
+        dlBtn.click();
+      }
+    }catch(e){ console.error(e); alert('Share failed. Try downloading instead.'); }
+  }
+  shareBtn.addEventListener('click', share);
+
+  // ---------- GALLERY ----------
+  function addToGallery(){
+    const img = new Image(); img.src = toPNG();
+    const wrap = document.createElement('div'); wrap.className='thumb';
+    const a = document.createElement('a'); a.href = img.src; a.download = 'meme-lord.png';
+    a.appendChild(img); wrap.appendChild(a); gallery.prepend(wrap);
+  }
+
+  // ---------- EVENTS ----------
+  randomBtn.addEventListener('click', randomize);
+  quoteBtn.addEventListener('click', ()=>{ state.quote = FUNNY_LINES[rand(0,FUNNY_LINES.length-1)]; drawCard(); });
+  genBtn.addEventListener('click', drawCard);
+
+  // initial
+  drawCard();
+})();
+</script>
+</body>
+</html>
