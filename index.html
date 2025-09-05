@@ -237,9 +237,27 @@
   }
 
   // ---------- AI QUOTE (DeepSeek) ----------
+    // ---------- AI QUOTE (DeepSeek через Railway) ----------
   async function aiQuote(){
-    const prompt = `Write a short, witty, meme‑like one‑liner for a social card.\nRules: max 12 words, playful, internet humor, no profanity, no hashtags.`;
+    const prompt = "Write a short, witty, meme-like one-liner for a social card. Max 12 words, internet humor, family-friendly.";
     aiBtn.disabled = true; aiBtn.textContent = '✨ Thinking...';
+    try{
+      const res = await fetch("https://ТВОЙ_ПРОЕКТ.up.railway.app/deepseek", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+      const data = await res.json();
+      const text = data.choices?.[0]?.message?.content?.trim();
+      if(text) { state.quote = text; drawCard(); }
+    }catch(err){
+      console.error(err);
+      alert("DeepSeek request failed.");
+    }finally{
+      aiBtn.disabled = false; aiBtn.textContent = '✨ Generate with AI';
+    }
+  }
+
     try{
       const res = await fetch('https://api.deepseek.com/v1/chat/completions',{
         method:'POST',
