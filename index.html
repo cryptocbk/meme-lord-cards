@@ -249,41 +249,84 @@
   }
 
   // ---------- AI QUOTE (OpenAI from browser) ----------
-  async function aiQuote(){
-    const key = apiKeyInput.value.trim();
-    if(!key) { alert('Enter your OpenAI API key first.'); return; }
-    const prompt = `Write a short, witty, meme‑like one‑liner for a social card.\nRules: max 12 words, playful, internet humor, no profanity, no hashtags.`;
-    aiBtn.disabled = true; aiBtn.textContent = '✨ Thinking...';
-    try{
-      const res = await fetch('https://api.openai.com/v1/chat/completions',{
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role:'system', content:'You craft ultra-short, funny, family‑friendly meme captions.' },
-            { role:'user', content: prompt }
-          ],
-          temperature: 0.9,
-          max_tokens: 30
-        })
-      });
-      if(!res.ok){
-        const t = await res.text();
-        throw new Error(`API error ${res.status}: ${t}`);
-      }
-      const data = await res.json();
-      const text = data.choices?.[0]?.message?.content?.trim();
-      if(text) { state.quote = text.replace(/^"|"$/g,''); drawCard(); }
-    }catch(err){
-      console.error(err);
-      alert('AI request failed. Using a random line instead.');
-      state.quote = FUNNY_LINES[rand(0,FUNNY_LINES.length-1)];
+async function aiQuote(){
+  // === REPLACE ONLY THE VALUE BELOW WITH YOUR OPENROUTER / DEEPSEEK KEY (keep quotes) ===
+  const OPENROUTER_KEY = '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';
+  // ===================================================================================
+  aiBtn.disabled = true;
+  aiBtn.textContent = '✨ Thinking...';
+
+  try{
+    // If for some reason you intentionally want blank key behavior (local fallback),
+    // the function will fall back to local random phrase.
+    if(!OPENROUTER_KEY || OPENROUTER_KEY.trim().length === 0){
+      state.quote = FUNNY_LINES[rand(0, FUNNY_LINES.length-1)];
       drawCard();
-    }finally{
-      aiBtn.disabled = false; aiBtn.textContent = '✨ Generate with AI';
+      return;
     }
+
+    const prompt = `Write a short, witty, meme-like one-liner for a social card.
+Rules: max 12 words, playful, internet humor, no profanity, no hashtags.`;
+
+    const payload = {
+      model: 'deepseek/deepseek-chat',
+      messages: [
+        { role: 'system', content: 'You craft ultra-short, funny, family-friendly meme captions.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.9,
+      max_tokens: 30
+    };
+
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENROUTER_KEY}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if(!res.ok){
+      const txt = await res.text();
+      throw new Error(`API error ${res.status}: ${txt}`);
+    }
+
+    const data = await res.json();
+
+    // Try to extract text from several possible response shapes (robust)
+    let text = null;
+    if (data?.choices?.[0]?.message?.content) text = data.choices[0].message.content;
+    if(!text && data?.output_text) text = data.output_text;
+    if(!text && data?.choices?.[0]?.text) text = data.choices[0].text;
+    if(!text && Array.isArray(data?.output) && data.output[0]){
+      // openrouter sometimes nests content
+      const out = data.output[0];
+      if (out?.content) {
+        const c = out.content.find(c=>c?.type==='message' || c?.text);
+        if(c) text = c.text || (c?.parts && c.parts.join(' ')) || null;
+      }
+    }
+
+    if(text){
+      state.quote = String(text).trim().replace(/^"|"$/g,'');
+    } else {
+      // fallback if parsing failed
+      state.quote = FUNNY_LINES[rand(0, FUNNY_LINES.length-1)];
+    }
+
+    drawCard();
+  }catch(err){
+    console.error('DeepSeek/OpenRouter error:', err);
+    alert('DeepSeek request failed — using a local random quote instead.');
+    state.quote = FUNNY_LINES[rand(0, FUNNY_LINES.length-1)];
+    drawCard();
+  }finally{
+    aiBtn.disabled = false;
+    aiBtn.textContent = '✨ Generate with AI';
   }
+}
+}
 
   testAI.addEventListener('click', async ()=>{
     const key = apiKeyInput.value.trim();
