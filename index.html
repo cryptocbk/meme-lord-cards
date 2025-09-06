@@ -16,137 +16,109 @@
     }
     *{box-sizing:border-box}
     body{margin:0;background:radial-gradient(1200px 800px at 70% -10%, #1f2937 0%, #0b0f16 40%), var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Apple Color Emoji,Arial,sans-serif;}
-    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(12px);background:linear-gradient(#0b0f16cc,#0b0f1600);z-index:10;
-      animation:slideInDown 0.8s ease-out;}
-    .wrap{max-width:1060px;margin:0 auto;padding:16px}
-    .nav{display:flex;align-items:center;gap:12px}
-    .logo{font-weight:800;letter-spacing:.5px;
-      animation:glow 3s ease-in-out infinite alternate;}
-    .badge{font-size:12px;color:#a7f3d0;background:#064e3b;border:1px solid #065f46;border-radius:999px;padding:4px 8px;
-      animation:fadeInRight 1s ease-out 0.5s both;}
-
-    /* ANIMATIONS */
-    @keyframes slideInDown {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes slideInLeft {
-      from { transform: translateX(-100px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideInRight {
-      from { transform: translateX(100px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    
+    /* Анимации */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeInUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeInRight {
-      from { transform: translateX(30px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
     }
     @keyframes glow {
-      from { text-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
-      to { text-shadow: 0 0 20px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.4); }
+      from { text-shadow: 0 0 5px rgba(34, 197, 94, 0.3); }
+      to { text-shadow: 0 0 15px rgba(34, 197, 94, 0.6); }
     }
     @keyframes bounce {
       0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-3px); }
-      60% { transform: translateY(-1px); }
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+      40% { transform: translateY(-8px); }
+      60% { transform: translateY(-4px); }
     }
     @keyframes cardFlip {
-      0% { transform: perspective(600px) rotateY(0deg); }
-      50% { transform: perspective(600px) rotateY(180deg); }
-      100% { transform: perspective(600px) rotateY(0deg); }
+      0% { transform: rotateY(0deg) scale(1); }
+      50% { transform: rotateY(180deg) scale(0.95); }
+      100% { transform: rotateY(0deg) scale(1); }
     }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-2px); }
-      75% { transform: translateX(2px); }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
     }
+
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(12px);background:linear-gradient(#0b0f16cc,#0b0f1600);z-index:10;animation:fadeInDown 0.8s ease-out;}
+    .wrap{max-width:1060px;margin:0 auto;padding:16px}
+    .nav{display:flex;align-items:center;gap:12px}
+    .logo{font-weight:800;letter-spacing:.5px;animation:glow 2s ease-in-out infinite alternate;}
+    .badge{font-size:12px;color:#a7f3d0;background:#064e3b;border:1px solid #065f46;border-radius:999px;padding:4px 8px}
 
     .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px}
     @media(min-width:980px){.grid{grid-template-columns:420px 1fr}}
 
-    .panel{background:linear-gradient(180deg,#141a24,#0f1622);border:1px solid #1f2937;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);
-      transition:all 0.3s ease;}
-    .panel:nth-child(1) { animation:slideInLeft 1s ease-out 0.2s both; }
-    .panel:nth-child(2) { animation:slideInRight 1s ease-out 0.4s both; }
-    .panel:nth-child(3) { animation:fadeInUp 1s ease-out 0.6s both; }
+    .panel{background:linear-gradient(180deg,#141a24,#0f1622);border:1px solid #1f2937;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);animation:slideInLeft 0.8s ease-out;transition:all 0.3s ease;}
     .panel:hover{transform:translateY(-2px);box-shadow:0 15px 40px rgba(0,0,0,.4);}
+    .panel:nth-child(2){animation:slideInRight 0.8s ease-out;}
+    .panel:nth-child(3){animation:fadeInUp 0.8s ease-out 0.3s both;}
     .panel h2{margin:0 0 10px 0;font-size:18px}
     .muted{color:var(--muted);font-size:13px}
 
-    .upload{border:2px dashed #374151;border-radius:16px;padding:16px;text-align:center;transition:all .3s ease}
-    .upload.drag{border-color:var(--accent);box-shadow:0 0 0 6px var(--ring);animation:pulse 0.6s ease;}
+    .upload{border:2px dashed #374151;border-radius:16px;padding:16px;text-align:center;transition:all .3s ease;position:relative;overflow:hidden;}
+    .upload:before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(34,197,94,0.1),transparent);transform:rotate(45deg);transition:all 0.5s;opacity:0;}
+    .upload:hover:before{opacity:1;transform:rotate(45deg) translate(50px,50px);}
+    .upload.drag{border-color:var(--accent);box-shadow:0 0 0 6px var(--ring);animation:pulse 1s infinite;}
     .upload input{display:none}
     .upload .btn{display:inline-flex;gap:8px;align-items:center;margin-top:10px}
 
     .row{display:flex;gap:10px;flex-wrap:wrap}
     .field{flex:1;min-width:160px}
     label{display:block;font-size:12px;color:var(--muted);margin:6px 0}
-    select,input[type="text"],input[type="number"],input[type="password"]{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #374151;background:#0b1220;color:var(--text);
-      transition:all 0.2s ease;}
-    select:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring);outline:none;}
+    select,input[type="text"],input[type="number"]{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #374151;background:#0b1220;color:var(--text);transition:all 0.3s ease;}
+    select:focus,input[type="text"]:focus,input[type="number"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring);outline:none;}
 
-    .btn{background:#10b981;color:#03211a;border:none;padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(16,185,129,.25);transition:all .2s ease}
+    .btn{background:#10b981;color:#03211a;border:none;padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer;box-shadow:0 6px 16px rgba(16,185,129,.25);transition:all .2s ease;position:relative;overflow:hidden;}
+    .btn:before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,0.2);border-radius:50%;transition:all 0.3s;transform:translate(-50%,-50%);}
+    .btn:hover:before{width:300px;height:300px;}
     .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,185,129,.35);animation:bounce 0.6s ease;}
-    .btn:active{transform:translateY(0);animation:none;}
+    .btn:active{transform:translateY(0);}
     .btn.secondary{background:#1f2937;color:#e5e7eb;border:1px solid #374151;box-shadow:none}
-    .btn.secondary:hover{background:#374151;transform:translateY(-1px);}
+    .btn.secondary:hover{background:#374151;box-shadow:0 4px 12px rgba(0,0,0,.3);}
     .btn.ghost{background:transparent;color:var(--text);border:1px dashed #334155}
-    .btn.ghost:hover{border-color:var(--accent);color:var(--accent);}
-    .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;animation:none;}
+    .btn.ghost:hover{background:#1f2937;border-color:var(--accent);}
 
     .tools{display:flex;gap:8px;flex-wrap:wrap}
 
-    canvas{width:100%;max-width:520px;border-radius:16px;border:1px solid #1f2937;background:#0b1220;
-      transition:all 0.3s ease;cursor:pointer;}
-    canvas:hover{transform:scale(1.02);box-shadow:0 10px 30px rgba(0,0,0,.5);}
+    canvas{width:100%;max-width:520px;border-radius:16px;border:1px solid #1f2937;background:#0b1220;transition:all 0.3s ease;cursor:pointer;}
+    canvas:hover{transform:scale(1.02);box-shadow:0 20px 40px rgba(0,0,0,.4);}
     canvas.flipping{animation:cardFlip 1s ease-in-out;}
 
     .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-    .thumb{background:#0b1220;border:1px solid #1f2937;border-radius:14px;padding:10px;
-      transition:all 0.3s ease;animation:fadeInUp 0.6s ease-out;}
-    .thumb:hover{transform:translateY(-5px);border-color:var(--accent);}
+    .thumb{background:#0b1220;border:1px solid #1f2937;border-radius:14px;padding:10px;transition:all 0.3s ease;animation:fadeInUp 0.5s ease-out;}
+    .thumb:hover{transform:scale(1.05);box-shadow:0 10px 25px rgba(0,0,0,.3);}
     .thumb img{width:100%;border-radius:10px}
 
-    footer{opacity:.8;font-size:12px;padding:28px 0;text-align:center;
-      animation:fadeInUp 1s ease-out 1s both;}
+    footer{opacity:.8;font-size:12px;padding:28px 0;text-align:center;animation:fadeInUp 1s ease-out 0.5s both;}
     a{color:#86efac}
 
-    .theme-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #334155;padding:8px 10px;border-radius:999px;cursor:pointer;
-      transition:all 0.2s ease;}
-    .theme-chip input{display:none}
-    .theme-chip.active{border-color:#10b981;box-shadow:0 0 0 4px var(--ring);animation:pulse 0.4s ease;}
+    .theme-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #334155;padding:8px 10px;border-radius:999px;cursor:pointer;transition:all 0.3s ease;}
     .theme-chip:hover{transform:scale(1.05);border-color:#10b981;}
+    .theme-chip input{display:none}
+    .theme-chip.active{border-color:#10b981;box-shadow:0 0 0 4px var(--ring);animation:pulse 2s infinite;}
     .chips{display:flex;flex-wrap:wrap;gap:10px}
     .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;background:#0b1220;border:1px solid #334155;border-radius:6px;padding:2px 6px;color:#e5e7eb}
 
-    /* Quote Category Buttons */
-    .quote-categories{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0;}
-    .category-btn{background:transparent;border:1px solid #334155;color:#94a3b8;padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;
-      transition:all 0.2s ease;}
-    .category-btn:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.05);}
-    .category-btn.active{background:var(--accent);color:#0b0f16;border-color:var(--accent);}
-
-    /* Stats animation */
-    .stat-bar{animation:fillBar 2s ease-out 0.5s both;}
-    @keyframes fillBar {
-      from { width: 0; }
-      to { width: var(--fill-width); }
-    }
-
-    /* Notification */
-    .notification{position:fixed;top:20px;right:20px;background:var(--accent);color:#0b0f16;padding:12px 16px;border-radius:12px;
-      font-weight:600;z-index:1000;transform:translateX(100%);transition:transform 0.3s ease;}
-    .notification.show{transform:translateX(0);}
+    /* Категории текста */
+    .text-categories{margin:10px 0;display:flex;gap:8px;flex-wrap:wrap;}
+    .category-btn{background:#1f2937;color:#e5e7eb;border:1px solid #374151;padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;transition:all 0.3s ease;}
+    .category-btn:hover{background:#374151;transform:scale(1.05);}
+    .category-btn.active{background:var(--accent);color:#03211a;border-color:var(--accent);}
   </style>
 </head>
 <body>
@@ -193,18 +165,15 @@
           <label>Theme</label>
           <div class="chips" id="themes"></div>
         </div>
-      </div>
-
-      <div class="row">
         <div class="field">
-          <label>Quote Category</label>
-          <div class="quote-categories" id="quoteCategories"></div>
-        </div>
-        <div class="field">
-          <label>Funny quote</label>
-          <div class="tools">
-            <button id="quoteBtn" class="btn secondary" type="button">🎭 Random</button>
-            <button id="aiBtn" class="btn" type="button">🧠 Smart Generate</button>
+          <label>Funny quote categories</label>
+          <div class="text-categories">
+            <button class="category-btn active" data-category="funny">😂 Funny</button>
+            <button class="category-btn" data-category="sarcastic">😏 Sarcastic</button>
+            <button class="category-btn" data-category="motivational">💪 Motivation</button>
+            <button class="category-btn" data-category="absurd">🤪 Absurd</button>
+            <button class="category-btn" data-category="tech">💻 Tech</button>
+            <button class="category-btn" data-category="life">🌟 Life</button>
           </div>
         </div>
       </div>
@@ -215,19 +184,10 @@
         <div class="field"><label>Chaos</label><input id="chs" type="number" min="0" max="100" value="42"/></div>
       </div>
 
-      <div class="row">
-        <div class="field">
-          <label>OpenAI API Key <span class="muted">(stored only in memory; optional)</span></label>
-          <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off"/>
-        </div>
-        <div class="field" style="display:flex;align-items:flex-end">
-          <button id="testAI" class="btn ghost" type="button">Test AI</button>
-        </div>
-      </div>
-
       <div class="tools" style="margin-top:12px">
         <button id="randomBtn" class="btn" type="button">🎲 Shuffle stats</button>
-        <button id="genBtn" class="btn" type="button">⚡ Render card</button>
+        <button id="quoteBtn" class="btn" type="button">✨ Smart generate</button>
+        <button id="genBtn" class="btn secondary" type="button">⚡ Render card</button>
         <button id="dlBtn" class="btn secondary" type="button">⬇️ Download PNG</button>
         <button id="shareBtn" class="btn ghost" type="button">📤 Share</button>
       </div>
@@ -239,7 +199,6 @@
     <section class="panel">
       <h2>Preview</h2>
       <canvas id="card" width="750" height="1050" aria-label="Card preview"></canvas>
-      <div class="muted" style="margin-top:8px;text-align:center;font-size:11px;">💡 Click on the card to generate a new random quote</div>
     </section>
 
     <section class="panel" style="grid-column:1/-1">
@@ -251,8 +210,6 @@
   <footer class="wrap">
     Built for fun ❤️ — host this single file on GitHub Pages. No trackers, no servers.
   </footer>
-
-  <div id="notification" class="notification"></div>
 
 <script>
 (function(){
@@ -270,14 +227,9 @@
   const genBtn = $('#genBtn');
   const randomBtn = $('#randomBtn');
   const quoteBtn = $('#quoteBtn');
-  const aiBtn = $('#aiBtn');
   const shareBtn = $('#shareBtn');
   const gallery = $('#gallery');
-  const apiKeyInput = $('#apiKey');
-  const testAI = $('#testAI');
   const themesWrap = $('#themes');
-  const quoteCategoriesWrap = $('#quoteCategories');
-  const notification = $('#notification');
 
   // ---------- THEME DEFINITIONS ----------
   const THEMES = [
@@ -288,88 +240,140 @@
     { id:'steel', name:'Steel', bg:['#0a0a0a','#151515'], glow:'#60a5fa', primary:'#93c5fd', accent:'#e5e7eb'}
   ];
 
-  // ---------- ENHANCED QUOTE CATEGORIES ----------
-  const QUOTE_CATEGORIES = {
-    funny: {
-      name: '😂 Funny',
-      quotes: [
-        "Powered by caffeine and chaos",
-        "Wi‑Fi whisperer, router tamer",
-        "Certified 'one more episode' pro",
-        "Runs on memes and instant noodles",
-        "404: serious face not found",
-        "Keyboard warrior, snack mage",
-        "Low battery, high drama",
-        "Lag spikes, zero excuses",
-        "Born to scroll, forced to work",
-        "NPC energy, main‑character hair",
-        "Procrastination level: Expert",
-        "Survived Y2K, still debugging",
-        "Sleep is for the weak (and I'm weak)",
-        "Ctrl+Z life decisions",
-        "Battery at 1%, living at 100%"
-      ]
-    },
-    sarcastic: {
-      name: '😏 Sarcastic', 
-      quotes: [
-        "Oh great, another meeting",
-        "Adulting: 0 stars, would not recommend",
-        "I'm not arguing, I'm explaining why I'm right",
-        "Sure, let's add another deadline",
-        "Working hard or hardly working? Yes.",
-        "My code works, don't touch it",
-        "Monday again? How original",
-        "Asking for a friend (it's me)",
-        "Fine, I'll do it myself",
-        "Surprise! It's still broken"
-      ]
-    },
-    motivational: {
-      name: '💪 Motivational',
-      quotes: [
-        "Debugging the world, one bug at a time",
-        "Today's code is tomorrow's legacy",
-        "Turning coffee into code since forever",
-        "Push through, git happens",
-        "Compile your dreams into reality", 
-        "Every bug is a learning opportunity",
-        "Code with passion, deploy with confidence",
-        "The best time to code was yesterday",
-        "Make it work, make it better",
-        "Ship it, then improve it"
-      ]
-    },
-    philosophical: {
-      name: '🤔 Deep',
-      quotes: [
-        "In a world of zeros and ones, be a two",
-        "Life is like code: full of unexpected bugs",
-        "We are all functions in the universe's code",
-        "To err is human, to really mess up requires a computer",
-        "The real treasure was the bugs we fixed along the way",
-        "Are we living or just executing?",
-        "What is reality but persistent data?",
-        "In the end, we're all just data",
-        "Code is poetry in logic",
-        "The universe is just a big algorithm"
-      ]
-    },
-    absurd: {
-      name: '🤪 Random',
-      quotes: [
-        "My rubber duck debugs better than most humans",
-        "Coding in Comic Sans for extra chaos",
-        "Stack Overflow is my second brain",
-        "Naming variables after my pets",
-        "Git commit -m 'YOLO'",
-        "Coding with oven mitts for difficulty",
-        "My code is self-documenting (spoiler: it's not)",
-        "Debugging by aggressive commenting",
-        "Powered by sheer confusion and luck",
-        "Error 404: Motivation not found"
-      ]
-    }
+  // ---------- IMPROVED TEXT COLLECTION ----------
+  const FUNNY_TEXTS = {
+    funny: [
+      "Powered by caffeine and chaos",
+      "Wi‑Fi whisperer, router tamer",
+      "Certified 'one more episode' pro",
+      "Runs on memes and instant noodles",
+      "404: serious face not found",
+      "Professional procrastinator since birth",
+      "Keyboard warrior, snack champion",
+      "Low battery, high drama",
+      "Born to scroll, forced to work",
+      "Netflix PhD, Amazon Prime member",
+      "Adulting level: Still loading...",
+      "Sleep is for people without WiFi",
+      "Sarcasm is my second language",
+      "Currently avoiding responsibilities",
+      "Expert in selective hearing",
+      "Fluent in movie quotes only",
+      "Allergic to mornings and small talk",
+      "Professional overthinker & underachiever",
+      "Survived on 3 hours sleep & energy drinks",
+      "Mastered the art of looking busy"
+    ],
+    sarcastic: [
+      "Oh wow, another life coach",
+      "Shocking: Monday exists again",
+      "Clearly I peaked in kindergarten",
+      "Amazing how that didn't work out",
+      "Definitely not overthinking this",
+      "Sure, let's make it more complicated",
+      "Obviously I have my life together",
+      "Fantastic, another meeting about meetings",
+      "Perfect timing, as always",
+      "Absolutely thrilled about this update",
+      "Wonderful, more unsolicited advice",
+      "Clearly the expert has arrived",
+      "Outstanding work ethic right there",
+      "Brilliant plan, nothing could go wrong",
+      "Impressive dedication to chaos",
+      "Excellent prioritization skills shown",
+      "Revolutionary idea: basic common sense",
+      "Groundbreaking discovery: water is wet",
+      "Shocking revelation: people need coffee",
+      "Mind-blowing concept: deadlines exist"
+    ],
+    motivational: [
+      "Believe in your WiFi connection",
+      "You're the main character today",
+      "Failure is just success in progress",
+      "Dream big, start small, act now",
+      "Your vibe attracts your tribe",
+      "Be the energy you want to attract",
+      "Progress over perfection always",
+      "Challenges are growth in disguise",
+      "Every expert was once a beginner",
+      "Your only limit is your mindset",
+      "Small steps lead to big changes",
+      "Consistency beats perfection",
+      "Today's struggle is tomorrow's strength",
+      "Growth happens outside comfort zones",
+      "You're stronger than your excuses",
+      "Success is a series of small wins",
+      "Focus on progress, not perfection",
+      "Discipline creates freedom",
+      "Every day is a fresh start",
+      "Your potential is unlimited"
+    ],
+    absurd: [
+      "Professional banana phone operator",
+      "Certified unicorn whisperer",
+      "Expert in quantum toast physics",
+      "Licensed dream architect",
+      "Professional cloud taste tester",
+      "Certified gravity consultant",
+      "Expert in invisible ink calligraphy",
+      "Licensed rainbow technician",
+      "Professional sock puppet therapist",
+      "Certified time sandwich maker",
+      "Expert in musical furniture tuning",
+      "Licensed dragon parking attendant",
+      "Professional bubble wrap philosopher",
+      "Certified moon dust sommelier",
+      "Expert in backwards water skiing",
+      "Licensed penguin dance instructor",
+      "Professional cheese mountain climber",
+      "Certified invisible rope maker",
+      "Expert in upside-down architecture",
+      "Licensed flying carpet mechanic"
+    ],
+    tech: [
+      "404: Life motivation not found",
+      "Ctrl+Z my last life decision",
+      "Running on legacy code and hope",
+      "Git commit -m 'fixed everything'",
+      "Debugging life one error at a time",
+      "Stack Overflow saved my career",
+      "printf('Hello World, I'm tired');",
+      "Refactoring my life's spaghetti code",
+      "Error 418: I'm a teapot",
+      "Recursion: see recursion",
+      "Null pointer exception in my brain",
+      "Compiling... please wait forever",
+      "Cache cleared, problems remain",
+      "Infinite loop in the breakfast routine",
+      "Memory leak detected in my wallet",
+      "Deprecated function: early mornings",
+      "API request timeout: social skills",
+      "Database corrupted: weekend plans",
+      "Server down: motivation service",
+      "Merge conflict: pizza vs. diet"
+    ],
+    life: [
+      "Plot twist: I'm still figuring it out",
+      "Currently buffering life updates",
+      "Collecting moments, not things",
+      "Living proof that coffee works",
+      "Still writing my origin story",
+      "Professional human being in training",
+      "Mastering the art of winging it",
+      "Life's too short for matching socks",
+      "Making memories and questionable choices",
+      "Currently starring in my own drama",
+      "Life coach: my own bad decisions",
+      "Expert in learning things the hard way",
+      "Specializing in organized chaos",
+      "PhD in trial and error methods",
+      "Professional day dreamer and night thinker",
+      "Certified overthinker with anxiety honors",
+      "Master of disguised panic attacks",
+      "Advanced practitioner of fake confidence",
+      "Distinguished procrastination scholar",
+      "Lifetime achievement in missed opportunities"
+    ]
   };
 
   // ---------- STATE ----------
@@ -380,29 +384,6 @@
     theme: THEMES[0],
     currentCategory: 'funny'
   };
-
-  // ---------- NOTIFICATION SYSTEM ----------
-  function showNotification(message, duration = 3000) {
-    notification.textContent = message;
-    notification.classList.add('show');
-    setTimeout(() => notification.classList.remove('show'), duration);
-  }
-
-  // ---------- UI: QUOTE CATEGORIES ----------
-  function renderQuoteCategories() {
-    quoteCategoriesWrap.innerHTML = '';
-    Object.entries(QUOTE_CATEGORIES).forEach(([key, category]) => {
-      const btn = document.createElement('button');
-      btn.className = 'category-btn' + (key === state.currentCategory ? ' active' : '');
-      btn.textContent = category.name;
-      btn.onclick = () => {
-        state.currentCategory = key;
-        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      };
-      quoteCategoriesWrap.appendChild(btn);
-    });
-  }
 
   // ---------- UI: THEME CHIPS ----------
   function renderThemeChips(){
@@ -415,17 +396,24 @@
         state.theme = t; 
         drawCard(); 
         document.querySelectorAll('.theme-chip').forEach(c=>c.classList.remove('active')); 
-        chip.classList.add('active');
-        showNotification(`Theme changed to ${t.name}`);
+        chip.classList.add('active'); 
       };
       themesWrap.appendChild(chip);
     });
   }
+  renderThemeChips();
+
+  // ---------- CATEGORY BUTTONS ----------
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      state.currentCategory = this.dataset.category;
+    });
+  });
 
   // ---------- IMAGE HANDLING ----------
-  function setDropActive(a){ 
-    drop.classList.toggle('drag', !!a); 
-  }
+  function setDropActive(a){ drop.classList.toggle('drag', !!a); }
   ;['dragenter','dragover'].forEach(e=>drop.addEventListener(e, ev=>{ ev.preventDefault(); setDropActive(true); }));
   ;['dragleave','drop'].forEach(e=>drop.addEventListener(e, ev=>{ ev.preventDefault(); setDropActive(false); }));
   drop.addEventListener('drop', async (ev)=>{
@@ -438,94 +426,34 @@
     state.image = URL.createObjectURL(f);
     state.imageBitmap = await createImageBitmap(await (await fetch(state.image)).blob());
     drawCard();
-    showNotification('Image uploaded successfully!');
   }
 
-  // ---------- ENHANCED RANDOMIZATION ----------
+  // ---------- RANDOMIZATION ----------
   function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-  
   function randomize(){
-    const names = ["Meme Lord","Chaos Gremlin","Vibe Captain","Emoji Overlord","Code Wizard","Bug Hunter","Pixel Artist","Data Sage"];
-    nameInput.value = names[rand(0,names.length-1)];
+    nameInput.value = ["Meme Lord","Chaos Gremlin","Vibe Captain","Emoji Overlord","Digital Shaman","Pixel Wizard"][rand(0,5)];
     rarity.selectedIndex = rand(0,3);
     lvl.value = rand(10,999); 
     vir.value = rand(1,100); 
     chs.value = rand(0,100);
-    
-    // Random category and quote
-    const categories = Object.keys(QUOTE_CATEGORIES);
-    state.currentCategory = categories[rand(0, categories.length-1)];
-    renderQuoteCategories();
-    
-    const quotes = QUOTE_CATEGORIES[state.currentCategory].quotes;
-    state.quote = quotes[rand(0,quotes.length-1)];
-    
-    // Animate the button
-    randomBtn.style.animation = 'shake 0.5s ease';
-    setTimeout(() => randomBtn.style.animation = '', 500);
-    
+    // Generate quote from current category
+    const categoryTexts = FUNNY_TEXTS[state.currentCategory] || FUNNY_TEXTS.funny;
+    state.quote = categoryTexts[rand(0, categoryTexts.length-1)];
     drawCard();
-    showNotification('Stats shuffled!');
   }
 
-  // ---------- AI QUOTE (OpenAI from browser) ----------
-  async function aiQuote(){
-    const key = apiKeyInput.value.trim();
-    if(!key) { alert('Enter your OpenAI API key first.'); return; }
+  // ---------- SMART QUOTE GENERATION ----------
+  function generateSmartQuote(){
+    const categoryTexts = FUNNY_TEXTS[state.currentCategory] || FUNNY_TEXTS.funny;
+    state.quote = categoryTexts[rand(0, categoryTexts.length-1)];
     
-    const categoryContext = {
-      funny: "Make it hilarious and relatable",
-      sarcastic: "Make it witty and sarcastic", 
-      motivational: "Make it inspiring and uplifting",
-      philosophical: "Make it thoughtful and deep",
-      absurd: "Make it weird and random"
-    };
-    
-    const prompt = `Write a short, ${categoryContext[state.currentCategory] || 'funny'}, meme‑like one‑liner for a social card.\nRules: max 12 words, internet humor, no profanity, no hashtags.`;
-    
-    aiBtn.disabled = true; aiBtn.textContent = '✨ Thinking...';
-    try{
-      const res = await fetch('https://api.openai.com/v1/chat/completions',{
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role:'system', content:'You craft ultra-short, funny, family‑friendly meme captions.' },
-            { role:'user', content: prompt }
-          ],
-          temperature: 0.9,
-          max_tokens: 30
-        })
-      });
-      if(!res.ok){
-        const t = await res.text();
-        throw new Error(`API error ${res.status}: ${t}`);
-      }
-      const data = await res.json();
-      const text = data.choices?.[0]?.message?.content?.trim();
-      if(text) { 
-        state.quote = text.replace(/^"|"$/g,''); 
-        drawCard();
-        showNotification('AI quote generated!');
-      }
-    }catch(err){
-      console.error(err);
-      alert('AI request failed. Using a random line instead.');
-      const quotes = QUOTE_CATEGORIES[state.currentCategory].quotes;
-      state.quote = quotes[rand(0,quotes.length-1)];
+    // Animation effect
+    card.classList.add('flipping');
+    setTimeout(() => {
       drawCard();
-    }finally{
-      aiBtn.disabled = false; aiBtn.textContent = '✨ Generate with AI';
-    }
+      card.classList.remove('flipping');
+    }, 500);
   }
-
-  testAI.addEventListener('click', async ()=>{
-    const key = apiKeyInput.value.trim();
-    if(!key) return alert('Enter your OpenAI API key first.');
-    try{ await aiQuote(); }catch(e){ console.error(e); }
-  });
-  aiBtn.addEventListener('click', aiQuote);
 
   // ---------- DRAWING ----------
   function roundRect(ctx, x, y, w, h, r){
@@ -583,30 +511,44 @@
 
   function wrapText(text, x, y, maxWidth, lineHeight){
     const words = text.split(' ');
-    let line = '', dy = 0;
+    let line = '', lines = [], dy = 0;
+    
+    // Collect all lines first
     for (let n = 0; n < words.length; n++) {
       const testLine = line + words[n] + ' ';
       const metrics = ctx.measureText(testLine);
       if (metrics.width > maxWidth && n > 0) {
-        ctx.fillText(line, x, y + dy); dy += lineHeight; line = words[n] + ' ';
-      } else { line = testLine; }
+        lines.push(line.trim());
+        line = words[n] + ' ';
+      } else { 
+        line = testLine; 
+      }
     }
-    ctx.fillText(line.trim(), x, y + dy);
+    if(line.trim()) lines.push(line.trim());
+    
+    // Center vertically and draw
+    const totalHeight = lines.length * lineHeight;
+    let startY = y - totalHeight/2 + lineHeight/2;
+    
+    lines.forEach((line, i) => {
+      ctx.fillText(line, x, startY + i * lineHeight);
+    });
   }
 
   function drawStats(){
-    // quote box
+    // quote box - улучшенное отображение
     const qx = 48, qy = 660, qw = card.width - 96, qh = 120;
     ctx.fillStyle = '#0b1220'; roundRect(ctx, qx, qy, qw, qh, 16); ctx.fill();
     ctx.strokeStyle = '#334155'; ctx.lineWidth = 2; roundRect(ctx, qx, qy, qw, qh, 16); ctx.stroke();
 
-    ctx.font = '600 22px Inter, system-ui, sans-serif';
+    // Улучшенное отображение цитаты - крупнее и по центру
+    ctx.font = '600 24px Inter, system-ui, sans-serif';
     ctx.fillStyle = state.theme.accent;
-    ctx.fillText('"', qx+12, qy+34);
-
-    ctx.font = '600 20px Inter, system-ui, sans-serif';
-    ctx.fillStyle = '#e5e7eb';
-    wrapText(state.quote || 'Certified Meme Lord', qx+36, qy+34, qw-56, 26);
+    ctx.textAlign = 'center';
+    
+    // Добавляем кавычки
+    const quotedText = `"${state.quote || 'Certified Meme Lord'}"`;
+    wrapText(quotedText, qx + qw/2, qy + qh/2, qw - 24, 28);
 
     // stat bars
     const sx = 48, sy = 810, sw = card.width - 96, sh = 180;
@@ -618,7 +560,9 @@
     const barH = 26; let y = sy;
     stats.forEach(st => {
       ctx.font = '600 16px Inter, system-ui, sans-serif';
-      ctx.fillStyle = '#cbd5e1'; ctx.fillText(st.label, sx, y+18);
+      ctx.fillStyle = '#cbd5e1'; 
+      ctx.textAlign = 'left';
+      ctx.fillText(st.label, sx, y+18);
       // track
       const w = sw; const bx = sx; const by = y+24;
       ctx.fillStyle = '#111827'; roundRect(ctx, bx, by, w, barH, 10); ctx.fill();
@@ -650,42 +594,14 @@
     drawStats();
   }
 
-  // ---------- ENHANCED CARD INTERACTIONS ----------
-  card.addEventListener('click', function() {
-    this.classList.add('flipping');
-    setTimeout(() => {
-      generateRandomQuote();
-      this.classList.remove('flipping');
-    }, 500);
-  });
-
-  function generateRandomQuote() {
-    const quotes = QUOTE_CATEGORIES[state.currentCategory].quotes;
-    const newQuote = quotes[rand(0, quotes.length-1)];
-    // Ensure we don't get the same quote
-    if (newQuote === state.quote && quotes.length > 1) {
-      return generateRandomQuote();
-    }
-    state.quote = newQuote;
-    drawCard();
-    showNotification(`New ${QUOTE_CATEGORIES[state.currentCategory].name} quote!`);
-  }
-
   // ---------- EXPORT / SHARE ----------
   function toPNG(){ return card.toDataURL('image/png'); }
-  
   dlBtn.addEventListener('click', ()=>{
     const link = document.createElement('a');
     const name = (nameInput.value||'MemeLord').replace(/[^a-z0-9_-]+/gi,'_');
     link.download = `${name}_card.png`;
-    link.href = toPNG(); 
-    link.click();
+    link.href = toPNG(); link.click();
     addToGallery();
-    showNotification('Card downloaded successfully!');
-    
-    // Button animation
-    dlBtn.style.animation = 'pulse 0.6s ease';
-    setTimeout(() => dlBtn.style.animation = '', 600);
   });
 
   async function share(){
@@ -694,88 +610,37 @@
       const file = new File([blob], 'meme-lord.png', {type:'image/png'});
       if(navigator.canShare && navigator.canShare({files:[file]})){
         await navigator.share({ title:'Meme Lord Card', files:[file], text:'Check my Meme Lord card!' });
-        showNotification('Card shared successfully!');
       } else {
         alert('Sharing not supported. The image was downloaded instead.');
         dlBtn.click();
       }
-    }catch(e){ 
-      console.error(e); 
-      alert('Share failed. Try downloading instead.'); 
-    }
+    }catch(e){ console.error(e); alert('Share failed. Try downloading instead.'); }
   }
   shareBtn.addEventListener('click', share);
 
-  // ---------- ENHANCED GALLERY ----------
+  // ---------- GALLERY ----------
   function addToGallery(){
-    const img = new Image(); 
-    img.src = toPNG();
-    const wrap = document.createElement('div'); 
-    wrap.className='thumb';
-    wrap.style.animationDelay = '0s'; // Reset animation for new items
-    const a = document.createElement('a'); 
-    a.href = img.src; 
-    a.download = 'meme-lord.png';
-    a.appendChild(img); 
-    wrap.appendChild(a); 
-    gallery.prepend(wrap);
-    
-    // Animate new gallery item
-    setTimeout(() => wrap.style.animation = 'fadeInUp 0.6s ease-out', 10);
+    const img = new Image(); img.src = toPNG();
+    const wrap = document.createElement('div'); wrap.className='thumb';
+    const a = document.createElement('a'); a.href = img.src; a.download = 'meme-lord.png';
+    a.appendChild(img); wrap.appendChild(a); gallery.prepend(wrap);
   }
 
-  // ---------- ENHANCED EVENTS ----------
+  // ---------- EVENTS ----------
   randomBtn.addEventListener('click', randomize);
-  
-  quoteBtn.addEventListener('click', ()=>{ 
-    generateRandomQuote();
-    quoteBtn.style.animation = 'bounce 0.6s ease';
-    setTimeout(() => quoteBtn.style.animation = '', 600);
-  });
-  
-  genBtn.addEventListener('click', () => {
-    drawCard();
-    showNotification('Card rendered!');
-    genBtn.style.animation = 'pulse 0.4s ease';
-    setTimeout(() => genBtn.style.animation = '', 400);
-  });
+  quoteBtn.addEventListener('click', generateSmartQuote);
+  genBtn.addEventListener('click', drawCard);
 
-  // Input animations
-  [nameInput, rarity, lvl, vir, chs].forEach(input => {
-    input.addEventListener('input', () => {
-      drawCard();
-      input.style.animation = 'pulse 0.3s ease';
-      setTimeout(() => input.style.animation = '', 300);
-    });
-  });
+  // Click on canvas for flip animation and new quote
+  card.addEventListener('click', generateSmartQuote);
 
-  // Auto-update card on changes
-  nameInput.addEventListener('input', drawCard);
-  rarity.addEventListener('change', drawCard);
-  lvl.addEventListener('input', drawCard);
-  vir.addEventListener('input', drawCard);
-  chs.addEventListener('input', drawCard);
-
-  // ---------- INITIALIZATION ----------
-  renderThemeChips();
-  renderQuoteCategories();
-  drawCard();
-  
-  // Auto-generate new quotes periodically for demo
+  // Auto-generate quotes every 45 seconds for demo
   setInterval(() => {
-    if (!state.imageBitmap) { // Only if no custom image
-      const categories = Object.keys(QUOTE_CATEGORIES);
-      state.currentCategory = categories[rand(0, categories.length-1)];
-      renderQuoteCategories();
-      generateRandomQuote();
+    if(!state.imageBitmap) {
+      generateSmartQuote();
     }
-  }, 45000); // Every 45 seconds
+  }, 45000);
 
-  // Welcome notification
-  setTimeout(() => {
-    showNotification('Welcome! Upload an image or click the card to start 🎉');
-  }, 2000);
+  // initial
+  drawCard();
 })();
-</script>
-</body>
-</html>
