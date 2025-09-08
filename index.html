@@ -204,7 +204,7 @@
           <label>Funny quote</label>
           <div class="tools">
             <button id="quoteBtn" class="btn secondary" type="button">🎭 Random</button>
-            <button id="aiBtn" class="btn" type="button">🧠 Smart Generate</button>
+            <button id="geminiBtn" class="btn" type="button">🧠 Generate with Gemini</button>
           </div>
         </div>
       </div>
@@ -214,17 +214,6 @@
         <div class="field"><label>Virality %</label><input id="vir" type="number" min="0" max="100" value="69"/></div>
         <div class="field"><label>Chaos</label><input id="chs" type="number" min="0" max="100" value="42"/></div>
       </div>
-
-      <div class="row">
-        <div class="field">
-          <label>OpenAI API Key <span class="muted">(stored only in memory; optional)</span></label>
-          <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off"/>
-        </div>
-        <div class="field" style="display:flex;align-items:flex-end">
-          <button id="testAI" class="btn ghost" type="button">Test AI</button>
-        </div>
-      </div>
-
       <div class="tools" style="margin-top:12px">
         <button id="randomBtn" class="btn" type="button">🎲 Shuffle stats</button>
         <button id="genBtn" class="btn" type="button">⚡ Render card</button>
@@ -270,11 +259,9 @@
   const genBtn = $('#genBtn');
   const randomBtn = $('#randomBtn');
   const quoteBtn = $('#quoteBtn');
-  const aiBtn = $('#aiBtn');
+  const geminiBtn = $('#geminiBtn');
   const shareBtn = $('#shareBtn');
   const gallery = $('#gallery');
-  const apiKeyInput = $('#apiKey');
-  const testAI = $('#testAI');
   const themesWrap = $('#themes');
   const quoteCategoriesWrap = $('#quoteCategories');
   const notification = $('#notification');
@@ -292,6 +279,7 @@
   const QUOTE_CATEGORIES = {
     funny: {
       name: '😂 Funny',
+      prompt: 'Write a hilarious and relatable meme-like one-liner',
       quotes: [
         "Powered by caffeine and chaos",
         "Wi‑Fi whisperer, router tamer",
@@ -311,7 +299,8 @@
       ]
     },
     sarcastic: {
-      name: '😏 Sarcastic', 
+      name: '😏 Sarcastic',
+      prompt: 'Write a witty and sarcastic meme-like one-liner',
       quotes: [
         "Oh great, another meeting",
         "Adulting: 0 stars, would not recommend",
@@ -327,6 +316,7 @@
     },
     motivational: {
       name: '💪 Motivational',
+      prompt: 'Write an inspiring and uplifting meme-like one-liner',
       quotes: [
         "Debugging the world, one bug at a time",
         "Today's code is tomorrow's legacy",
@@ -342,6 +332,7 @@
     },
     philosophical: {
       name: '🤔 Deep',
+      prompt: 'Write a thoughtful and deep meme-like one-liner',
       quotes: [
         "In a world of zeros and ones, be a two",
         "Life is like code: full of unexpected bugs",
@@ -357,6 +348,7 @@
     },
     absurd: {
       name: '🤪 Random',
+      prompt: 'Write a weird and random meme-like one-liner',
       quotes: [
         "My rubber duck debugs better than most humans",
         "Coding in Comic Sans for extra chaos",
@@ -467,65 +459,57 @@
     drawCard();
     showNotification('Stats shuffled!');
   }
+  
+  // ---------- GEMINI QUOTE GENERATION ----------
+  async function geminiQuote() {
+    const geminiBtn = $('#geminiBtn');
+    const selectedCategory = QUOTE_CATEGORIES[state.currentCategory];
+    const systemPrompt = `Write a one-line meme caption in Russian that is short, funny, and family-friendly.`;
+    const userPrompt = `${selectedCategory.prompt} on a topic: no more than 12 words, no profanity, no hashtags.`;
 
-  // ---------- AI QUOTE (OpenAI from browser) ----------
-  async function aiQuote(){
-    const key = apiKeyInput.value.trim();
-    if(!key) { alert('Enter your OpenAI API key first.'); return; }
-    
-    const categoryContext = {
-      funny: "Make it hilarious and relatable",
-      sarcastic: "Make it witty and sarcastic", 
-      motivational: "Make it inspiring and uplifting",
-      philosophical: "Make it thoughtful and deep",
-      absurd: "Make it weird and random"
-    };
-    
-    const prompt = `Write a short, ${categoryContext[state.currentCategory] || 'funny'}, meme‑like one‑liner for a social card.\nRules: max 12 words, internet humor, no profanity, no hashtags.`;
-    
-    aiBtn.disabled = true; aiBtn.textContent = '✨ Thinking...';
-    try{
-      const res = await fetch('https://api.openai.com/v1/chat/completions',{
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':`Bearer ${key}` },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role:'system', content:'You craft ultra-short, funny, family‑friendly meme captions.' },
-            { role:'user', content: prompt }
-          ],
+    geminiBtn.disabled = true;
+    geminiBtn.textContent = '✨ Генерация...';
+
+    try {
+      const apiKey = ''; // Leave as-is
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+      const payload = {
+        contents: [{ parts: [{ text: userPrompt }] }],
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        generationConfig: {
           temperature: 0.9,
-          max_tokens: 30
-        })
+          maxOutputTokens: 30
+        },
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
-      if(!res.ok){
-        const t = await res.text();
-        throw new Error(`API error ${res.status}: ${t}`);
-      }
-      const data = await res.json();
-      const text = data.choices?.[0]?.message?.content?.trim();
-      if(text) { 
-        state.quote = text.replace(/^"|"$/g,''); 
-        drawCard();
-        showNotification('AI quote generated!');
-      }
-    }catch(err){
-      console.error(err);
-      alert('AI request failed. Using a random line instead.');
-      const quotes = QUOTE_CATEGORIES[state.currentCategory].quotes;
-      state.quote = quotes[rand(0,quotes.length-1)];
+
+      const result = await response.json();
+      const text = result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'Ошибка генерации цитаты.';
+      state.quote = text.replace(/^"|"$/g, '');
       drawCard();
-    }finally{
-      aiBtn.disabled = false; aiBtn.textContent = '✨ Generate with AI';
+      showNotification('Цитата сгенерирована!');
+
+    } catch (error) {
+      console.error('Gemini API Error:', error);
+      alert('Ошибка при запросе к Gemini. Используется случайная цитата.');
+      const quotes = selectedCategory.quotes;
+      state.quote = quotes[rand(0, quotes.length - 1)];
+      drawCard();
+    } finally {
+      geminiBtn.disabled = false;
+      geminiBtn.textContent = '🧠 Generate with Gemini';
     }
   }
-
-  testAI.addEventListener('click', async ()=>{
-    const key = apiKeyInput.value.trim();
-    if(!key) return alert('Enter your OpenAI API key first.');
-    try{ await aiQuote(); }catch(e){ console.error(e); }
-  });
-  aiBtn.addEventListener('click', aiQuote);
+  
+  geminiBtn.addEventListener('click', geminiQuote);
 
   // ---------- DRAWING ----------
   function roundRect(ctx, x, y, w, h, r){
@@ -554,7 +538,7 @@
     const frameX = pad; const frameY = pad + 12;
     // frame bg
     ctx.fillStyle = '#0b1220'; roundRect(ctx, frameX, frameY, frameW, frameH, 18); ctx.fill();
-    ctx.strokeStyle = '#334155'; ctx.lineWidth = 3; roundRect(ctx, frameX, frameY, frameW, frameH, 18); ctx.stroke();
+    ctx.strokeStyle = '#334151'; ctx.lineWidth = 3; roundRect(ctx, frameX, frameY, frameW, frameH, 18); ctx.stroke();
     if(!state.imageBitmap) return;
     const img = state.imageBitmap;
     const r = Math.min(frameW/img.width, frameH/img.height);
